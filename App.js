@@ -1,20 +1,77 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component, useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Image,ScrollView, Button} from 'react-native';
+import {colors} from "./src/constants";
+import Keyboard from "./src/components/Keyboard";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+
+import HomeScreen from './HomeScreen';
+import Funcwordlescreen from './AboutScreen';
+import SightRead from './sightread';
+import SignInScreen from './src/screens/SignInScreens/SignInScreen'
+import SignUpScreen from './src/screens/SignUpScreens/SignUpScreen';
+import ConfirmEmailScreen from './src/screens/ConfirmEmailScreens';
+import ForgotPasswordScreen from './src/screens/ForgotPasswordScreens/ForgotPasswordScreen';
+import NewPasswordScreen from './src/screens/NewPasswordScreens/NewPasswordScreen';
+import Navigation from './src/navigation';
+import Amplify from 'aws-amplify'
+import config from './src/aws-exports'
+
+Amplify.configure(config)
+
+
+const App = () =>  {
+  //Auth.signOut()
+    return (
+      <SafeAreaView style = {styles.root}>
+      <Navigation/>
+      </SafeAreaView>
+      
+    );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = StyleSheet.create({ 
+  root: {
+    backgroundColor:"#F9FBFC", 
+    flex: 1
+  }
+}) 
+
+const signUpConfig = {
+  header: "My Customized Sign Up",
+  hideAllDefaults: true,
+  signUpFields: [
+    {
+      label: "Full name",
+      key: "name",
+      required: true,
+      displayOrder: 1,
+      type: "string",
+    },
+    {
+      label: "Email",
+      key: "email",
+      required: true,
+      displayOrder: 2,
+      type: "string",
+    },
+    {
+      label: "Username",
+      key: "preferred_username",
+      required: true,
+      displayOrder: 3,
+      type: "string",
+    },
+    {
+      label: "Password",
+      key: "password",
+      required: true,
+      displayOrder: 4,
+      type: "password",
+    },
+  ],
+};
+
+export default App
