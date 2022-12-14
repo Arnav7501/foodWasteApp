@@ -29,7 +29,6 @@ const App = () =>  {
     return (
       <SafeAreaView style = {styles.root}>
       <Navigation/>
-	Alert.alert("This is a test")
       </SafeAreaView>
       
     );
