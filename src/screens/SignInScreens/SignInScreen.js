@@ -40,10 +40,10 @@ const SignInScreen = () => {
     }
 
     const onSignIngoogle = useCallback(() => {
-        Auth.federatedSignIn({ provider:"google" })
+        Auth.federatedSignIn({provider: CognitoHostedUIIdentityProvider.Google })
     }, []);
     const onSignInFacebook = () => {
-        console.warn("On Forgot Password Pressed")
+        Auth.federatedSignIn({provider: CognitoHostedUIIdentityProvider.Facebook })
     }
     const onSignInApple = () => {
         console.warn("On Forgot Password Pressed")

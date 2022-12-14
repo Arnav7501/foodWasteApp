@@ -1,25 +1,66 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect} from 'react';
 import {StyleSheet, Text, View, SafeAreaView, Image,ScrollView, Button, useWindowDimensions, Alert, ImageBackground} from 'react-native';
 
 import { useNavigation} from '@react-navigation/native'
 import { Auth } from 'aws-amplify';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import { TextInput } from 'react-native-gesture-handler';
-
+import { DataStore } from '@aws-amplify/datastore';
+import { ClubArray, SchoolArray } from '../../models';
+import { useRoute } from '@react-navigation/native';
 import Logo from '../../../assets/images/clubiconnobackground.png'
-const items = [
-  { name: 'Irvington Football' },
-];
+
+
 
 const Clubinterimscreen = () => {
+  const items = [
+
+  ];
+  const route = useRoute()
   const navigation = useNavigation()
   const {fontScale} = useWindowDimensions(); 
   const styles = makeStyles(fontScale);
   const [newschoolname, setnewschoolname] = useState('');
   const {height} = useWindowDimensions(); 
+  const schoolname1 = route.params.schoolname;
+  var schoolname = schoolname1.toString()
+
+  
+  useEffect(() => {
+    get_data()
+    console.log("clubinterimscreen", schoolname)
+  }, []);
 
   const signOut = () => {
     navigation.goBack()
+  }
+
+  const pass_schoolname = (item) => {
+      var new1 = JSON.stringify(item)
+      navigation.navigate('clubhomescreen', {
+      schoolname: new1,
+      schoolclubname:  schoolname
+    })
+  }
+  
+  const get_data = async() => {
+    const posts = await DataStore.query(ClubArray, (p) =>
+    p.identifier("eq", schoolname)
+  );
+    var arrayLength = posts.length;
+    for (var i = 0; i < arrayLength; i++) {
+      items.push({name: posts[i].name}) 
+  }  
+  }
+
+  const update_Array = async(newname) => {
+    await DataStore.save(
+        new ClubArray({
+          name: newname,
+          identifier: schoolname
+        })
+      );
+      items.push({name: newname}) 
   }
   
   return (
@@ -38,9 +79,7 @@ const Clubinterimscreen = () => {
         <SearchableDropdown
           onTextChange={(text) => console.log(text)}
           //On text change listner on the searchable input
-          onItemSelect={(item) => navigation.navigate('clubhomescreen', {
-            schoolname: JSON.stringify(item)
-          })
+          onItemSelect={(item) => pass_schoolname(item)
         }
           //onItemSelect called after the selection from the dropdown
           containerStyle={{ padding: 5 }}
@@ -114,27 +153,16 @@ const Clubinterimscreen = () => {
            fontSize: 25/fontScale
         }}
         onPress = {() => 
-         {items.push({
-          name: newschoolname}) 
+         {update_Array(newschoolname)
           Alert.alert( newschoolname, "was added successfully")
+          navigation.goBack()
         }
         }>
         
           Add
         </Text>
         </View>
-        <Text
-        onPress={signOut}
-          style = {{
-            width: '100%',
-            textAlign: 'center',
-            color: 'red',
-            marginTop: 'auto',
-            marginVertical: 20,
-            fontSize: 20
-          }}>
-            Back
-        </Text>
+        
         
      </View>
  // </ImageBackground>

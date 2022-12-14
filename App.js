@@ -18,15 +18,18 @@ import NewPasswordScreen from './src/screens/NewPasswordScreens/NewPasswordScree
 import Navigation from './src/navigation';
 import Amplify from 'aws-amplify'
 import config from './src/aws-exports'
-
+import { LogBox } from 'react-native';
 Amplify.configure(config)
 
-
+LogBox.ignoreLogs(['Warning: source.uri should not be an empty string ']);
+LogBox.ignoreLogs(['Warning: source.uri should not be an empty string ']);
+LogBox.ignoreAllLogs()
 const App = () =>  {
   //Auth.signOut()
     return (
       <SafeAreaView style = {styles.root}>
       <Navigation/>
+	Alert.alert("This is a test")
       </SafeAreaView>
       
     );

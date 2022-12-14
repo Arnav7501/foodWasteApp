@@ -1,31 +1,72 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {StyleSheet, Text, View, SafeAreaView, Image,ScrollView, Button, useWindowDimensions, Alert, ImageBackground} from 'react-native';
 import {colors} from "./src/constants";
 import Keyboard from "./src/components/Keyboard";
 import { useNavigation} from '@react-navigation/native'
-import { Auth } from 'aws-amplify';
+import {  Auth, Storage } from "aws-amplify";
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import { TextInput } from 'react-native-gesture-handler';
 import image2 from './assets/images/forestbackground.jpeg'
 import Logo from './assets/images/house2.png'
-const items = [
-  { name: 'Irvington' },
-];
 
-const HomeScreen = ({}) => {
+import { DataStore } from '@aws-amplify/datastore';
+import { SchoolArray } from './src/models';
+
+
+
+
+
+
+
+const HomeScreen = () => { 
+  const [items, setItems] = useState([])
+
+  const update_Array = async(newname) => {
+    await DataStore.save(
+        new SchoolArray({
+          name: newname
+        })
+      );
+      //items.push({name: newname}) 
+      get_data()
+  }
+  
+  const get_data = async() => {
+    const items1 = [
+      { name: 'Irvington' },
+    ];  
+    console.log("Geting Data")
+    const posts = await DataStore.query(SchoolArray);
+    var arrayLength = posts.length;
+    for (var i = 0; i < arrayLength; i++) {
+      items1.push({name: posts[i].name}) 
+  }  
+  setItems(items1)
+  }
+
   const navigation = useNavigation()
   const {fontScale} = useWindowDimensions(); 
   const styles = makeStyles(fontScale);
   const [newschoolname, setnewschoolname] = useState('');
   const {height} = useWindowDimensions(); 
+
+  useEffect(() => {
+    get_data()
+  }, []);
   const signOut = () => {
     Auth.signOut()
   }
   
+  
+  
+  
+  
   return (
-   
+   // items.push({
+    //  name: newschoolname}) 
     //<SafeAreaView style={styles.container}>
    // <ImageBackground source={image2} resizeMode="cover" style={styles.image}>
+   
       <View style={styles.container}>
      
         <Text style={styles.titleText}>
@@ -35,6 +76,7 @@ const HomeScreen = ({}) => {
         style = {[styles.logo, {height: height * 0.15}]}
         resizeMode = "contain" >
         </Image>
+
         <SearchableDropdown
           onTextChange={(text) => console.log(text)}
           //On text change listner on the searchable input
@@ -101,7 +143,8 @@ const HomeScreen = ({}) => {
         }}
      
           placeholder = "Name of School (City)"
-          onChangeText={newText => setnewschoolname(newText)}
+          onChangeText={newText => setnewschoolname(newText)
+          }
           >
 
         </TextInput>
@@ -114,9 +157,9 @@ const HomeScreen = ({}) => {
            fontSize: 25/fontScale
         }}
         onPress = {() => 
-         {items.push({
-          name: newschoolname}) 
-          Alert.alert( newschoolname, "was added successfully")
+         {
+          update_Array(newschoolname)
+          Alert.alert(newschoolname, "was added successfully")
         }
         }>
         
@@ -137,7 +180,7 @@ const HomeScreen = ({}) => {
         </Text>
         
      </View>
- //  </ImageBackground>
+ // </ImageBackground>
    // </SafeAreaView>
     
   );
@@ -164,7 +207,8 @@ const makeStyles = fontScale => StyleSheet.create({
   headingText: {
     fontSize: 25/fontScale,
     top: '5%',
-    textAlign: 'center'
+    textAlign: 'center',
+    
 
   },
   logo:{

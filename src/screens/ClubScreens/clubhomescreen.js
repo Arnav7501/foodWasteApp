@@ -1,32 +1,33 @@
-import React, { Component, useState, useEffect } from 'react';
-import {ImageBackground, StatusBar, StyleSheet, Linking, Text, View,
-     SafeAreaView, Image,
-     Button, TouchableOpacity,useWindowDimensions, ScrollView} from 'react-native';
-import { Auth } from 'aws-amplify';
+import React, {useState, useEffect} from 'react';
+import { StatusBar, StyleSheet,  Text, View,
+     Image,
+     TouchableOpacity,useWindowDimensions, ScrollView, Button} from 'react-native';
+
 import { useRoute } from '@react-navigation/native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import { useNavigation} from '@react-navigation/native'
+import { useNavigation, NavigationContainer, useFocusEffect} from '@react-navigation/native'
 import rectangleicon from '../../../assets/images/rectangle.png'
 import plusicon from '../../../assets/images/plus.png'
 import * as ImagePicker from 'expo-image-picker';
+import { DataStore } from '@aws-amplify/datastore';
+import {Clubinfo} from '../../models';
+
 const ClubHomeScreen = () => {
-    const [image, setImage] = useState("///Users/arnavchowdhry/Library/Developer/CoreSimulator/Devices/0BC4A95F-705A-4529-BB1F-8AECB033A620/data/Containers/Data/Application/168E9B25-4739-44A0-ABE9-5B80DC5E8675/Library/Caches/ExponentExperienceData/%2540arnav_123%252Ftest1/ImagePicker/F67D812F-6CFF-457A-9B8E-5209218D974B.jpg");
-    const [show_Hide, setShowHide] = useState('flex');
+  
+    const [image, setImage] = useState("");
+    const [president, setPresidents] = useState("");
+    const [meetingtimes, setMeetingTimes] = useState("");
+    const [howtosignup, setHowToSignUp] = useState("");
+    const [averagetimecommitment, setAverageTimeCommitment] = useState("");
+    const [descriptionofclub, setDescriptionOfClub] = useState("");
+    const [show_Hide, setShowHide] = useState("");
+
+    const {height, width} = useWindowDimensions();
+    
    
- 
     const [text, setText] = useState('Hide Image Component');
  
-    const letToggle = () => {
-       
-    if (show_Hide === 'flex') {
-      setShowHide('none');
-      setText('Show Image Component')
-    } else {
-      setShowHide('flex');
-      setText('Hide Image Component')
-    }
-  }
- 
+   
     const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -36,17 +37,21 @@ const ClubHomeScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
 
-    letToggle()
+      setImage(result.assets[0].uri);
+    
+    }
+    else {
+        return
+    }
+    
   };
   const navigation = useNavigation()
   const route = useRoute()
   const schoolname1 = route.params.schoolname;
+  const clubschoolname = route.params.schoolclubname
     var schoolname = ""
   
     for(let i = 9; i < schoolname1.length; i++){
@@ -57,86 +62,77 @@ const ClubHomeScreen = () => {
             break
         }
     }
+    
+    schoolname =  clubschoolname + " " + schoolname
 
+    useFocusEffect(
+      React.useCallback(() => {
+      const get_info = async() => {
+        const original = await DataStore.query(Clubinfo, (p) =>
+          p.identifier("eq", schoolname)
+        );
+        setPresidents(original[0].Presidents)
+        setMeetingTimes(original[0].MeetingTimes)
+        setHowToSignUp(original[0].HowToSignUp)
+        setAverageTimeCommitment[original[0].TimeCommitment]
+        setDescriptionOfClub(original[0].DescriptionOfClub)
+        setImage(original[0].image)
+      }
+      // call the function
+      get_info()
+      
+      }, [])
+    );
+
+ 
   const signOut = async() => {
     navigation.goBack()
   }
-    console.log("test")
-    //console.log(show_Hide)
-  //        <ImageBackground source={require('./Trombone/trombone.webp')} resizeMode="cover" style={styles.bgimage}>
+
+ 
     return (
-        <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-    
+        <View style={{padding: 10, flex: 1}}>
+      <ScrollView>
+
         <Text style = {{ top:'1%', fontSize: RFPercentage(5.5), alignSelf: 'center', textAlign: 'center', color: '#000000', fontWeight: 'bold'}}>
          {schoolname} </Text>
 
-        
+     
         <Image 
         resizeMode="stretch"
-        source={rectangleicon}
-        style = {{height: '30%',
-        width: '100%',
-        alignSelf: 'center',
-        marginTop: '15%',
-        marginBottom: '10%',
-        position:'absolute',
-        display: show_Hide
-       }}
-        >
-        </Image>
-        <TouchableOpacity onPress={pickImage} style = {{top:'7%'}}>
-        <Image 
-        source={plusicon}
-        onPress={pickImage} 
-        //style = {[styles.rectangleimage, {height: '15%',width: '15%', marginBottom: '10%'}]}
-        style = { {height: '30%',
-        width: '20%',
-        alignSelf: 'center',
-        marginTop: '4%',
-        display: show_Hide,
-        marginBottom: '2%'
-        }}
-        >
-        </Image>
-        </TouchableOpacity>  
-        <Image 
-        resizeMode='contain'
-      
         source={{uri: image}}
-        onPress={pickImage} 
-        //style = {[styles.rectangleimage, {height: '15%',width: '15%', marginBottom: '10%'}]}
-        style = { {height: '50%',
-        width: '100%',
-        alignSelf: 'center',
-        marginTop: '4%',
-        display: (show_Hide == "flex") ? "none" : "",
-        marginBottom: '2%'
-        }}
+        style = {{
+          height: height/3,
+          width: 1.5 * width,
+          alignSelf: 'center',
+          marginTop: '5%',
+          marginBottom: '3%',
+          display: image == "" ? "none" : "flex"
+         }}
+         
         >
         </Image>
        
-       <Text style = {styles.infofont}> President(s): 1997</Text>
-       <Text style = {styles.infofont}> Meeting times: Weekly</Text>
-       <Text style = {styles.infofont}> How To Sign Up: Form</Text>
-       <Text style = {styles.infofont}> Average Time Commitment: 1997</Text>
-       <Text style = {styles.infofont}> Founded: 1997</Text>
-       <Text style = {styles.infofont}> Founded: 1997</Text>
-
+       <Text style = {styles.infofont}>President(s): {'\n'}{president} </Text>
+       <Text style = {styles.infofont}>Meeting times:  {'\n'}{meetingtimes}</Text>
+       <Text style = {styles.infofont}>How To Sign Up:  {'\n'}{howtosignup}</Text>
+       <Text style = {styles.infofont}>Average Time Commitment: {'\n'} {averagetimecommitment}</Text>
+       <Text style = {styles.infofont}>Description of Club:  {'\n'} {descriptionofclub}  </Text>
+    
+      <Button title = "edit information" onPress={() => navigation.navigate('clubeditscreen', {
+            schoolname: schoolname
+          })
+        }></Button>
       <View style = {styles.buttonStyle}>
         <Button color="#841584"
             title="See Reviews"
-            onPress={() => navigation.navigate('SightRead')}
+            onPress={() => navigation.navigate('clubreviewscreen', {
+              schoolname: schoolname
+            })
+          }
           />
       </View>
-     
-      <Text style={{color: 'blue', top: '13%', textAlign: 'center'}}
-      onPress={() => Linking.openURL('https://forms.gle/G2HyrWXcyL7Udws26')}>
-       Got any Feedback? We'd love to hear from you!
-     </Text>
-   
-     
-
+      <Text style = {styles.infofont2}></Text>
         </ScrollView>
                
      <Text
@@ -151,13 +147,13 @@ const ClubHomeScreen = () => {
            }}>
              Back
          </Text>
-        </SafeAreaView>
+        </View>
        );
 }
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    top:'10%',
+    top:'2%',
     alignSelf: 'stretch',
     backgroundColor: '#A6E4FF',
     borderRadius: 5,
@@ -171,10 +167,14 @@ const styles = StyleSheet.create({
 container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
+    paddingBottom: 60,
+    padding: 10
   },
   scrollView: {
     backgroundColor: '#ffffff',
-    marginHorizontal: 20,
+    flex: 1
+    
+
   },
     title: {
   
@@ -187,14 +187,23 @@ container: {
   
   
    infofont: {
+    fontSize: RFPercentage(2.8),
+    marginTop: '3%',
+    alignContent: 'flex-end'
+  
+   },
+   infofont2: {
     fontSize: RFPercentage(3),
-    marginTop: '10%'
+    marginTop: '20%'
   
    },
 
    text: {
-    fontSize: RFValue(5)   
-   }
+    fontSize: RFValue(4)   
+   },
+
+
+   
   });
  
 

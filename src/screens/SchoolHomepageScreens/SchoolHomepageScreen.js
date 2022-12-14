@@ -8,6 +8,7 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation} from '@react-navigation/native'
 
+
 const SchoolHomepageScreen = () => {
     const route = useRoute()
     const navigation = useNavigation()
@@ -27,6 +28,8 @@ const SchoolHomepageScreen = () => {
         navigation.goBack()
     }
 
+   
+
     console.log(schoolname)
     return (
        <SafeAreaView >
@@ -42,7 +45,10 @@ const SchoolHomepageScreen = () => {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("clubinterimscreen")}
+            onPress={() => navigation.navigate('clubinterimscreen', {
+              schoolname: schoolname
+            })
+          }
             >
             
             <Text style = {styles.buttonFont}>Clubs</Text>
@@ -78,15 +84,7 @@ const SchoolHomepageScreen = () => {
             style={styles.buttonImageIconStyle}
             />
           </TouchableOpacity>
-          <Text 
-            onPress={() => goback()}
-            style = {{width: '100%',
-            textAlign: 'center',
-            color: 'red',
-            marginTop: 'auto',
-            marginVertical: 20,
-            fontSize: 20}}
-            >Back</Text>
+          
         </SafeAreaView>
       );
     };
@@ -106,7 +104,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       backgroundColor: "#ffffff",
       padding: 10,
-      height: "19%",
+      height: "23%",
       justifyContent: 'center',
       borderColor: "#000000",
       borderWidth: 2,
