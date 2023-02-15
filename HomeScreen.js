@@ -1,13 +1,12 @@
 import React, { Component, useState, useEffect } from 'react';
-import {StyleSheet, Text, View, SafeAreaView, Image,ScrollView, Button, useWindowDimensions, Alert, ImageBackground} from 'react-native';
-import {colors} from "./src/constants";
-import Keyboard from "./src/components/Keyboard";
+import {StyleSheet, Text, View,  Image, useWindowDimensions, Alert, StatusBar, TouchableOpacity} from 'react-native';
 import { useNavigation} from '@react-navigation/native'
 import {  Auth, Storage } from "aws-amplify";
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import { TextInput } from 'react-native-gesture-handler';
-import image2 from './assets/images/forestbackground.jpeg'
-import Logo from './assets/images/house2.png'
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import Logo from './assets/images/schoolimagereal.png'
 
 import { DataStore } from '@aws-amplify/datastore';
 import { SchoolArray } from './src/models';
@@ -20,6 +19,12 @@ import { SchoolArray } from './src/models';
 
 const HomeScreen = () => { 
   const [items, setItems] = useState([])
+  const capitalizeWords = (str) => {
+    return str
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   const update_Array = async(newname) => {
     await DataStore.save(
@@ -35,7 +40,6 @@ const HomeScreen = () => {
     const items1 = [
       { name: 'Irvington' },
     ];  
-    console.log("Geting Data")
     const posts = await DataStore.query(SchoolArray);
     var arrayLength = posts.length;
     for (var i = 0; i < arrayLength; i++) {
@@ -59,26 +63,19 @@ const HomeScreen = () => {
   
   
   
-  
-  
   return (
-   // items.push({
-    //  name: newschoolname}) 
-    //<SafeAreaView style={styles.container}>
-   // <ImageBackground source={image2} resizeMode="cover" style={styles.image}>
-   
       <View style={styles.container}>
-     
+           <StatusBar hidden/>
         <Text style={styles.titleText}>
           Find your School
         </Text>
-        <Image source ={Logo}
-        style = {[styles.logo, {height: height * 0.15}]}
+
+         <Image source ={Logo}
+        style = {[styles.logo, {height: height * 0.29}]}
         resizeMode = "contain" >
-        </Image>
+        </Image> 
 
         <SearchableDropdown
-          onTextChange={(text) => console.log(text)}
           //On text change listner on the searchable input
           onItemSelect={(item) => navigation.navigate('SchoolHomePage', {
             schoolname: JSON.stringify(item)
@@ -89,12 +86,13 @@ const HomeScreen = () => {
           //suggestion container style
           textInputStyle={{
             //inserted text style
-            marginTop: '5%',
+            marginTop: '-2%',
             padding: 12,
             borderWidth: 1,
             borderColor: '#ccc',
-            backgroundColor: '#FAF7F6',
-            borderRadius: 10
+            borderRadius: 10,
+            backgroundColor: 'white',
+            fontSize: 20
       
           }}
           itemStyle={{
@@ -119,6 +117,7 @@ const HomeScreen = () => {
           defaultIndex={2}
           //default selected item index
           placeholder="Name of School (City)"
+          placeholderTextColor = "#000000"
           //place holder for the search input
           resetValue={false}
           //reset textInput Value with true and false state
@@ -130,15 +129,17 @@ const HomeScreen = () => {
         Add it to the list </Text>
 
          <TextInput 
+         placeholderTextColor =  "#000000"
+         placeholderStyle={{ fontWeight: "bold" }}
           style = {{
           top: '10%', 
-          fontSize: 12,
+          fontSize: 20,
           marginTop: '5%',
           padding: 12,
           borderWidth: 1,
           borderColor: '#ccc',
-          backgroundColor: '#FAF7F6',
-          borderRadius: 10
+          borderRadius: 10,
+          backgroundColor: 'white',
           
         }}
      
@@ -149,38 +150,37 @@ const HomeScreen = () => {
 
         </TextInput>
         < View style = {{top: '15%'}}>
-          
-        <Text style = {{
-           width: '100%',
-           textAlign: 'center',
-           color: 'blue',
-           fontSize: 25/fontScale
-        }}
+     
+        <TouchableOpacity  
         onPress = {() => 
          {
-          update_Array(newschoolname)
-          Alert.alert(newschoolname, "was added successfully")
+          var newarray = capitalizeWords(newschoolname)
+          update_Array(newarray)
+          Alert.alert(newarray, "was added successfully")
         }
-        }>
-        
-          Add
-        </Text>
+      }
+      style={styles.button}>
+    <Text style={styles.text}>Add</Text>
+  </TouchableOpacity>
         </View>
+
+        <TouchableOpacity style={{  marginVertical: 0, marginTop: 'auto',  borderRadius: 5, width: '25%', alignSelf: 'center', height: '5%',   justifyContent: 'center', }} >
+
         <Text
         onPress={signOut}
           style = {{
             width: '100%',
             textAlign: 'center',
-            color: 'red',
-            marginTop: 'auto',
-            marginVertical: 20,
-            fontSize: 20
+            color: '#000000',
+            fontSize: 20,
+            fontWeight: 'bold'
+          
           }}>
             Sign Out
         </Text>
-        
+        </TouchableOpacity>
      </View>
- // </ImageBackground>
+  //</ImageBackground>
    // </SafeAreaView>
     
   );
@@ -195,30 +195,43 @@ const makeStyles = fontScale => StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#ADD8E6',
+    backgroundColor: '#ffffff',
     padding: 10,
   },
   titleText: {
-    padding: 8,
-    fontSize: 25/fontScale,
+    fontSize: 37/fontScale,
     textAlign: 'center',
     fontWeight: 'bold',
+
   },
   headingText: {
-    fontSize: 25/fontScale,
+    fontSize: 30/fontScale,
     top: '5%',
     textAlign: 'center',
-    
+    fontWeight: 'bold'
 
   },
   logo:{
     alignContent: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    marginBottom: 20,
-    width: '70%',
-    maxWidth: 300,
-    maxHeight: 200
-    
-}
+    width: '100%',
+    marginTop: '-5%'
+   // maxWidth: 300,
+   // maxHeight: 200
+   
+},
+text: {
+  fontWeight: 'bold',
+  color: '#ffffff',
+  fontSize: 20
+},
+button: {
+  alignItems: 'center',
+  backgroundColor: '#000000',
+  padding: 10,
+  borderRadius: 5,
+  height: '25%',
+  justifyContent: 'center'
+},
 });

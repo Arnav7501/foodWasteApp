@@ -61,6 +61,7 @@ const TeachersHomeScreen = () => {
         }
     }
     
+    print(schoolname2, cl)
     var schoolname =  clubschoolname + " " + schoolname2
 
     useFocusEffect(

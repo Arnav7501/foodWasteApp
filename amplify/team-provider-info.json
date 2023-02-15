@@ -13,9 +13,7 @@
     },
     "categories": {
       "auth": {
-        "Authentication": {
-          "googleClientId": "762469754163-puiiv9hi02tc7ins5qrokto0gj2m07ba.apps.googleusercontent.com"
-        }
+        "Authentication": {}
       }
     }
   }

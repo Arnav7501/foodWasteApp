@@ -24,11 +24,10 @@ const SignInScreen = () => {
         setLoading(true)
         try {
         const response = await Auth.signIn(data.username, data.password)
-        console.log("here")
+
     
       
         } catch (e) {
-            setCounter("It works")
             Alert.alert('There was a problem', e.message)
         }
         setLoading(false)

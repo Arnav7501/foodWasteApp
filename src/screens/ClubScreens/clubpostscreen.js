@@ -58,7 +58,6 @@ async function updatePost(id, num_likes) {
 
   
     if (already_reported !== "true") { 
-      console.log("not reported yet", already_reported)
       storeData(id, "true")
  
     if (num_reports > 10) {

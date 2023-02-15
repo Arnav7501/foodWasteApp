@@ -5,58 +5,54 @@ import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { DataStore } from '@aws-amplify/datastore';
-import {Clubinfo} from '../../models';
+import {CoursesInfo} from '../../models';
 import * as ImagePicker from 'expo-image-picker';
 import {
   AntDesign,
   MaterialCommunityIcons,
   MaterialIcons,
- 
+  
 } from "@expo/vector-icons";
 // You can import from local files
 
 // or any pure javascript modules available in npm
-const update_Array = async(identifier, Presidents, MeetingTimes,HowToSignUp,TimeCommitment,Description, Image) => {
-    const original = await DataStore.query(Clubinfo, (p) =>
+const update_Array = async(identifier, Teachers, Rigor, Description, Image) => {
+
+    const original = await DataStore.query(CoursesInfo, (p) =>
     p.identifier("eq", identifier)
   );
+
+  console.log("original", original, Teachers)
     if (original.length == 0) {
-        console.log("null", identifier)
         await DataStore.save(
-            new Clubinfo({
+            new CoursesInfo({
               identifier: identifier,
-              Presidents: Presidents,
-              MeetingTimes: MeetingTimes,
-              HowToSignUp: HowToSignUp,
-              TimeCommitment: TimeCommitment,
-              DescriptionOfClub: Description,
-              image: Image
+              Description: Description,
+              Rigor: Rigor,
+              Image: Image
             })
           );
     }
 
     else {
     await DataStore.save(
-      Clubinfo.copyOf(original[0], updated => {
+      CoursesInfo.copyOf(original[0], updated => {
         updated.identifier = identifier,
-        updated.Presidents = Presidents,
-        updated.MeetingTimes = MeetingTimes,
-        updated.HowToSignUp = HowToSignUp,
-        updated.TimeCommitment = TimeCommitment,
-        updated.DescriptionOfClub = Description
-        updated.image = Image
+        updated.Description = Description
+        updated.Rigor = Rigor,
+        updated.Teachers = Teachers
+        updated.Image = Image
+        
       })
     );
   }
   Alert.alert("Saved")
 }
 
-export default function ClubEditScreen() {
-    const [newschoolname, setnewschoolname] = useState('');
-    const [Presidents, setPresidents] = useState('');
-    const [MeetingTimes, setMeetingTimes] = useState('');
-    const [HowToSignUp, setHowToSignUp] = useState('');
-    const [TimeCommitment, setTimeCommitment] = useState('');
+export default function CoursesEditScreen() {
+
+    const [Teachers, setTeachers] = useState('');
+    const [Rigor, setRigor] = useState('');
     const [Description, setDescription] = useState('');
 
 
@@ -66,15 +62,15 @@ export default function ClubEditScreen() {
     const schoolname1 = route.params.schoolname;
 
     useEffect(() => {
+    
       // declare the data fetching function
       const get_info = async() => {
-        const original = await DataStore.query(Clubinfo, (p) =>
+        const original = await DataStore.query(CoursesInfo, (p) =>
           p.identifier("eq", schoolname1)
         );
-        setPresidents(original[0].Presidents)
-        setMeetingTimes(original[0].MeetingTimes)
-        setHowToSignUp(original[0].HowToSignUp)
-        setTimeCommitment(original[0].TimeCommitment)
+  
+        setTeachers(original[0].Teachers)
+        setRigor(original[0].Rigor)
         setDescription(original[0].DescriptionOfClub)
       }
       
@@ -111,10 +107,11 @@ export default function ClubEditScreen() {
     <View style={styles.container}>
 
 <Text style = {{ top:'1%', fontSize: RFPercentage(5.5), alignSelf: 'center', textAlign: 'center', color: '#000000', fontWeight: 'bold', marginBottom: '8%'}}>
-         Edit Club Information </Text>
-<Text style ={{fontSize: RFPercentage(2.5)}}>Presidents:</Text>
-      <TextInput 
-          defaultValue={Presidents}
+         Edit Course Information </Text>
+
+        <Text style ={{fontSize: RFPercentage(2.5)}}>Teachers:</Text>
+        <TextInput 
+          defaultValue={Teachers}
           style = {{
           fontSize: 12,
           marginTop: '1%',
@@ -125,32 +122,14 @@ export default function ClubEditScreen() {
           borderRadius: 10,
           marginBottom: '5%'
         }}
-          placeholder = "Presidents"
-          onChangeText={newText => setPresidents(newText)}
+          placeholder = "Teachers:"
+          onChangeText={newText => setTeachers(newText)}
           >
 
         </TextInput>
-        <Text style ={{fontSize: RFPercentage(2.5)}}>Meeting Times:</Text>
+        <Text style ={{fontSize: RFPercentage(2.5)}}>Rigor:</Text>
         <TextInput 
-          defaultValue={MeetingTimes}
-          style = {{
-          fontSize: 12,
-          marginTop: '1%',
-          padding: 12,
-          borderWidth: 1,
-          borderColor: '#ccc',
-          backgroundColor: '#FAF7F6',
-          borderRadius: 10,
-          marginBottom: '5%'
-        }}
-          placeholder = "Meeting Times:"
-          onChangeText={newText => setMeetingTimes(newText)}
-          >
-
-        </TextInput>
-        <Text style ={{fontSize: RFPercentage(2.5)}}>How to Sign Up:</Text>
-        <TextInput 
-        defaultValue={HowToSignUp}
+        defaultValue={Rigor}
           style = {{
           fontSize: 12,
           marginTop: '1%',
@@ -162,31 +141,12 @@ export default function ClubEditScreen() {
           marginBottom: '5%'
           
         }}
-          placeholder = "How to Sign Up:"
-          onChangeText={newText => setHowToSignUp(newText)}
+          placeholder = "Rigor:"
+          onChangeText={newText => setRigor(newText)}
           >
 
         </TextInput>
-        <Text style ={{fontSize: RFPercentage(2.5)}}>Average Time Commitment:</Text>
-        <TextInput 
-        defaultValue={TimeCommitment}
-          style = {{
-          fontSize: 12,
-          marginTop: '1%',
-          padding: 12,
-          borderWidth: 1,
-          borderColor: '#ccc',
-          backgroundColor: '#FAF7F6',
-          borderRadius: 10,
-          marginBottom: '5%'
-          
-        }}
-          placeholder = "Average Time Commitment"
-          onChangeText={newText => setTimeCommitment(newText)}
-          >
-
-        </TextInput>
-        <Text style ={{fontSize: RFPercentage(2.5)}}>Description of Club:</Text>
+        <Text style ={{fontSize: RFPercentage(2.5)}}>Description:</Text>
         <TextInput 
         defaultValue={Description}
           style = {{
@@ -196,15 +156,17 @@ export default function ClubEditScreen() {
           borderWidth: 1,
           borderColor: '#ccc',
           backgroundColor: '#FAF7F6',
-          borderRadius: 10
+          borderRadius: 10,
+          marginBottom: '5%'
           
         }}
-          placeholder = "Description of club"
+          placeholder = "General Description of Course"
           onChangeText={newText => setDescription(newText)}
           >
 
         </TextInput>
 
+       
         <Pressable style={[styles.button, { backgroundColor: "royalblue" }]}    onPress={() => pickImage()}>
         <AntDesign name="pluscircle" size={16} color="white" />
         <Text 
@@ -212,10 +174,9 @@ export default function ClubEditScreen() {
         Add new Image
         </Text>
       </Pressable>
-        <Text
+         <Text
          onPress={() => {
-          console.log("image,",image)
-          update_Array(schoolname1,Presidents,MeetingTimes,HowToSignUp,TimeCommitment,Description, image)}}
+          update_Array(schoolname1, Teachers,Rigor,Description, image)}}
            style = {{
              width: '100%',
              textAlign: 'center',
@@ -224,16 +185,18 @@ export default function ClubEditScreen() {
              fontSize: 20
            }}>
              Save
-         </Text>
+         </Text> 
         <Text
          onPress={signOut}
            style = {{
-             width: '100%',
-             textAlign: 'center',
-             color: 'red',
-             marginTop: 'auto',
-             marginVertical: 20,
-             fontSize: 20
+            width: '100%',
+            textAlign: 'center',
+            color: 'black',
+            fontWeight: 'bold',
+            marginTop: 'auto',
+            marginVertical: 20,
+            fontSize: 20,
+            top: '39%'
            }}>
              Back
          </Text>

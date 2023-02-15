@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { DataStore } from '@aws-amplify/datastore';
-import {Clubinfo} from '../../models';
+import {SportsInfo} from '../../models';
 import * as ImagePicker from 'expo-image-picker';
 import {
   AntDesign,
@@ -16,44 +16,41 @@ import {
 // You can import from local files
 
 // or any pure javascript modules available in npm
-const update_Array = async(identifier, Presidents, MeetingTimes,HowToSignUp,TimeCommitment,Description, Image) => {
-    const original = await DataStore.query(Clubinfo, (p) =>
-    p.identifier("eq", identifier)
+const update_Array = async(identifier, MeetingTimes,HowToSignUp,TimeCommitment,Description, Image) => {
+    const original = await DataStore.query(SportsInfo, (p) =>
+    p.Identifier("eq", identifier)
   );
     if (original.length == 0) {
-        console.log("null", identifier)
+  
         await DataStore.save(
-            new Clubinfo({
-              identifier: identifier,
-              Presidents: Presidents,
+            new SportsInfo({
+              Identifier: identifier,
               MeetingTimes: MeetingTimes,
               HowToSignUp: HowToSignUp,
               TimeCommitment: TimeCommitment,
-              DescriptionOfClub: Description,
-              image: Image
+              Description: Description,
+              Image: Image
             })
           );
     }
 
     else {
     await DataStore.save(
-      Clubinfo.copyOf(original[0], updated => {
-        updated.identifier = identifier,
-        updated.Presidents = Presidents,
+      SportsInfo.copyOf(original[0], updated => {
+        updated.Identifier = identifier,
         updated.MeetingTimes = MeetingTimes,
         updated.HowToSignUp = HowToSignUp,
         updated.TimeCommitment = TimeCommitment,
-        updated.DescriptionOfClub = Description
-        updated.image = Image
+        updated.Description = Description
+        updated.Image = Image
       })
     );
   }
   Alert.alert("Saved")
 }
 
-export default function ClubEditScreen() {
-    const [newschoolname, setnewschoolname] = useState('');
-    const [Presidents, setPresidents] = useState('');
+export default function SportsEditScreen() {
+   
     const [MeetingTimes, setMeetingTimes] = useState('');
     const [HowToSignUp, setHowToSignUp] = useState('');
     const [TimeCommitment, setTimeCommitment] = useState('');
@@ -68,14 +65,14 @@ export default function ClubEditScreen() {
     useEffect(() => {
       // declare the data fetching function
       const get_info = async() => {
-        const original = await DataStore.query(Clubinfo, (p) =>
-          p.identifier("eq", schoolname1)
+        const original = await DataStore.query(SportsInfo, (p) =>
+          p.Identifier("eq", schoolname1)
         );
-        setPresidents(original[0].Presidents)
+
         setMeetingTimes(original[0].MeetingTimes)
         setHowToSignUp(original[0].HowToSignUp)
         setTimeCommitment(original[0].TimeCommitment)
-        setDescription(original[0].DescriptionOfClub)
+        setDescription(original[0].Description)
       }
       
       // call the function
@@ -111,25 +108,10 @@ export default function ClubEditScreen() {
     <View style={styles.container}>
 
 <Text style = {{ top:'1%', fontSize: RFPercentage(5.5), alignSelf: 'center', textAlign: 'center', color: '#000000', fontWeight: 'bold', marginBottom: '8%'}}>
-         Edit Club Information </Text>
-<Text style ={{fontSize: RFPercentage(2.5)}}>Presidents:</Text>
-      <TextInput 
-          defaultValue={Presidents}
-          style = {{
-          fontSize: 12,
-          marginTop: '1%',
-          padding: 12,
-          borderWidth: 1,
-          borderColor: '#ccc',
-          backgroundColor: '#FAF7F6',
-          borderRadius: 10,
-          marginBottom: '5%'
-        }}
-          placeholder = "Presidents"
-          onChangeText={newText => setPresidents(newText)}
-          >
+         Edit Sport Information </Text>
 
-        </TextInput>
+
+
         <Text style ={{fontSize: RFPercentage(2.5)}}>Meeting Times:</Text>
         <TextInput 
           defaultValue={MeetingTimes}
@@ -214,8 +196,7 @@ export default function ClubEditScreen() {
       </Pressable>
         <Text
          onPress={() => {
-          console.log("image,",image)
-          update_Array(schoolname1,Presidents,MeetingTimes,HowToSignUp,TimeCommitment,Description, image)}}
+          update_Array(schoolname1, MeetingTimes,HowToSignUp,TimeCommitment,Description, image)}}
            style = {{
              width: '100%',
              textAlign: 'center',
@@ -230,10 +211,12 @@ export default function ClubEditScreen() {
            style = {{
              width: '100%',
              textAlign: 'center',
-             color: 'red',
+             color: 'black',
+             fontWeight: 'bold',
              marginTop: 'auto',
              marginVertical: 20,
-             fontSize: 20
+             fontSize: 20,
+             top: '25%'
            }}>
              Back
          </Text>

@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Image, Text, Pressable } from "react-native";
-import FeedPost from "./clubpostscreen";
+import FeedPost from "./teacherpostscreen";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from '@react-navigation/native';
@@ -10,10 +10,24 @@ import { Post2 } from '../../models';
 const img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
 
-const FeedScreen2 = () => {
+const TeacherFeedScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
-  const schoolname = route.params.schoolname;
+  const schoolname1 = route.params.schoolname;
+  const clubschoolname = route.params.schoolclubname
+    var schoolname = ""
+  
+    for(let i = 9; i < schoolname1.length; i++){
+        if (schoolname1[i] != "\"" && schoolname[i+1] != "}") {
+            schoolname += schoolname1[i]
+        }
+        else {
+            break
+        }
+    }
+    
+    schoolname =  clubschoolname + " " + schoolname + " teacher"
+
     
   const [posts, setPosts] = useState([]);
   
@@ -34,11 +48,8 @@ const FeedScreen2 = () => {
     }
 };
 
-
-
   const createPost = () => {
-    console.log("pressed")
-    navigation.navigate("clubreviewscreen", {
+    navigation.navigate("teachersPostScreen", {
         schoolname: schoolname
       });
   };
@@ -52,7 +63,7 @@ const FeedScreen2 = () => {
       ListHeaderComponent={() => (
         <Pressable onPress={createPost} style={styles.header}>
 
-          <Text style={styles.name}>Volunteer as a Tutor for Service Hours</Text>
+          <Text style={styles.name}>Submit a Review</Text>
           <Entypo
             name="images"
             size={24}
@@ -88,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FeedScreen2;
+export default TeacherFeedScreen;

@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect} from 'react';
-import {StyleSheet, Text, View, SafeAreaView, Image,ScrollView, Button, useWindowDimensions, Alert, ImageBackground} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, useWindowDimensions, Alert, ImageBackground} from 'react-native';
 
 import { useNavigation} from '@react-navigation/native'
 import { Auth } from 'aws-amplify';
@@ -8,7 +8,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import { DataStore } from '@aws-amplify/datastore';
 import { ClubArray, SchoolArray } from '../../models';
 import { useRoute } from '@react-navigation/native';
-import Logo from '../../../assets/images/clubiconnobackground.png'
+import Logo from '../../../assets/images/computericon.png'
 
 
 
@@ -28,7 +28,6 @@ const Clubinterimscreen = () => {
   
   useEffect(() => {
     get_data()
-    console.log("clubinterimscreen", schoolname)
   }, []);
 
   const signOut = () => {
@@ -73,7 +72,7 @@ const Clubinterimscreen = () => {
           Find your School's Clubs
         </Text>
         <Image source ={Logo}
-        style = {[styles.logo, {height: height * 0.15}]}
+        style = {[styles.logo, {height: height * 0.2}]}
         resizeMode = "contain" >
         </Image>
         <SearchableDropdown
@@ -91,8 +90,8 @@ const Clubinterimscreen = () => {
             borderWidth: 1,
             borderColor: '#ccc',
             backgroundColor: '#FAF7F6',
-            borderRadius: 10
-      
+            borderRadius: 10,
+            fontSize: 20,
           }}
           itemStyle={{
             //single dropdown item style
@@ -111,6 +110,7 @@ const Clubinterimscreen = () => {
             //to restrict the items dropdown hieght
             maxHeight: '60%',
           }}
+          placeholderTextColor = "#000000"
           items={items}
           //mapping of item array
           defaultIndex={2}
@@ -135,34 +135,40 @@ const Clubinterimscreen = () => {
           borderWidth: 1,
           borderColor: '#ccc',
           backgroundColor: '#FAF7F6',
-          borderRadius: 10
-          
+          borderRadius: 10,
+          fontSize: 20,
         }}
-     
+        placeholderTextColor = "#000000"
           placeholder = "Name of Club"
           onChangeText={newText => setnewschoolname(newText)}
           >
 
         </TextInput>
         < View style = {{top: '15%'}}>
-          
-        <Text style = {{
-           width: '100%',
-           textAlign: 'center',
-           color: 'blue',
-           fontSize: 25/fontScale
-        }}
+        <TouchableOpacity  
         onPress = {() => 
-         {update_Array(newschoolname)
-          Alert.alert( newschoolname, "was added successfully")
-          navigation.goBack()
+         {
+          update_Array(newschoolname)
+          Alert.alert(newschoolname, "was added successfully")
         }
-        }>
+      }
+      style={styles.button}>
+    <Text style={styles.text}>Add</Text>
+  </TouchableOpacity>
         
-          Add
-        </Text>
         </View>
-        
+        <Text
+        onPress={signOut}
+          style = {{
+            width: '100%',
+            textAlign: 'center',
+            color: 'red',
+            marginTop: 'auto',
+            marginVertical: 20,
+            fontSize: 20
+          }}>
+            Back
+        </Text>
         
      </View>
  // </ImageBackground>
@@ -180,29 +186,41 @@ const makeStyles = fontScale => StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#ADD8E6',
+    backgroundColor: '#ffffff',
     padding: 10,
   },
   titleText: {
     padding: 8,
-    fontSize: 25/fontScale,
+    fontSize: 35/fontScale,
     textAlign: 'center',
     fontWeight: 'bold',
   },
   headingText: {
-    fontSize: 25/fontScale,
+    fontSize: 30/fontScale,
     top: '5%',
-    textAlign: 'center'
-
+    textAlign: 'center',
+  
   },
   logo:{
     alignContent: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    marginBottom: 20,
-    width: '70%',
+
+    width: '100%',
     maxWidth: 300,  
     maxHeight: 200
-    
-}
+},
+text: {
+  fontWeight: 'bold',
+  color: '#ffffff',
+  fontSize: 20
+},
+button: {
+  alignItems: 'center',
+  backgroundColor: '#000000',
+  padding: 10,
+  borderRadius: 5,
+  height: '25%',
+  justifyContent: 'center'
+},
 });

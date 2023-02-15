@@ -20,7 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 
 
 
-const CreatePostScreen2 = () => {
+const TeacherPostScreen = () => {
   const dummy_img =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png";
   const [name, setName] = useState("");
@@ -32,7 +32,6 @@ const CreatePostScreen2 = () => {
   const route = useRoute()
   const schoolname = route.params.schoolname;
   
-    
   
   const onPost = async () => {
     const newPost = {
@@ -112,7 +111,7 @@ const CreatePostScreen2 = () => {
     
       />
 
-      <Text>{'In the below input, enter your review of the respective club'}</Text>
+      <Text>{'In the below input, enter your review of the respective teacher'}</Text>
       <TextInput
         placeholder= {'Enter information here'}
         value={description}
@@ -169,4 +168,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreatePostScreen2;
+export default TeacherPostScreen;

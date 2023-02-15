@@ -32,9 +32,9 @@ const CreatePostScreen2 = () => {
   const route = useRoute()
   const schoolname = route.params.schoolname;
   
-    
-  
+
   const onPost = async () => {
+    console.log("schooolname", schoolname)
     const newPost = {
       name: name,
       description: description,

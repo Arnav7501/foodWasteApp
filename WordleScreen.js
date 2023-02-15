@@ -100,7 +100,6 @@ export default function WordleScreen() {
       Alert.alert("Huraaay", "You won!", [
         { text: "Share", onPress: shareScore()},
       ]);
-      console.log("won2")
       setGameState("won");
     } else if (checkIfLost() && gameState !== "lost") {
       Alert.alert("Meh", "Try again tomorrow!");

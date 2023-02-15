@@ -271,7 +271,7 @@ const Funcwordlescreen = () => {
     
       <SafeAreaView style={styles.container}>
     
-        <StatusBar style="light"/>  
+        <StatusBar hidden/>  
         {/*<Image source={require('./LBNlogo.png')} style={styles.image} /> */} 
         <Text style  = {styles.title}>Music Wordle</Text>
         

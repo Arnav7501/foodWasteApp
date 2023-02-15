@@ -4,18 +4,18 @@ import { StatusBar, StyleSheet,  Text, View,
      TouchableOpacity,useWindowDimensions, ScrollView, Button} from 'react-native';
 
 import { useRoute } from '@react-navigation/native';
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import { useNavigation, NavigationContainer, useFocusEffect} from '@react-navigation/native'
+import { RFPercentage, } from "react-native-responsive-fontsize";
+import { useNavigation, useFocusEffect} from '@react-navigation/native'
 import * as ImagePicker from 'expo-image-picker';
 import { DataStore } from '@aws-amplify/datastore';
-import {Clubinfo} from '../../models';
+import {CoursesInfo} from '../../models';
 
-const CoursesHomeScreen = () => {
+const ClubHomeScreen = () => {
   
     const [image, setImage] = useState("");
-    const [president, setPresidents] = useState("");
-    const [meetingtimes, setMeetingTimes] = useState("");
-    const [howtosignup, setHowToSignUp] = useState("");
+ 
+    const [Rigor, setRigor] = useState("");
+    const [Teachers, setTeachers] = useState("");
     const [averagetimecommitment, setAverageTimeCommitment] = useState("");
     const [descriptionofclub, setDescriptionOfClub] = useState("");
     const [show_Hide, setShowHide] = useState("");
@@ -62,19 +62,19 @@ const CoursesHomeScreen = () => {
     }
     
     schoolname =  clubschoolname + " " + schoolname
-
+   
     useFocusEffect(
       React.useCallback(() => {
       const get_info = async() => {
-        const original = await DataStore.query(Clubinfo, (p) =>
+        const original = await DataStore.query(CoursesInfo, (p) =>
           p.identifier("eq", schoolname)
         );
-        setPresidents(original[0].Presidents)
-        setMeetingTimes(original[0].MeetingTimes)
-        setHowToSignUp(original[0].HowToSignUp)
-        setAverageTimeCommitment[original[0].TimeCommitment]
-        setDescriptionOfClub(original[0].DescriptionOfClub)
-        setImage(original[0].image)
+        console.log(original)
+   
+        setRigor(original[0].Rigor)
+        setTeachers(original[0].Teachers)
+        setDescriptionOfClub(original[0].Description)
+        setImage(original[0].Image)
       }
       // call the function
       get_info()
@@ -90,12 +90,12 @@ const CoursesHomeScreen = () => {
  
     return (
         <View style={{padding: 10, flex: 1}}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: height * 0.2}}>
 
         <Text style = {{ top:'1%', fontSize: RFPercentage(5.5), alignSelf: 'center', textAlign: 'center', color: '#000000', fontWeight: 'bold'}}>
          {schoolname} </Text>
-
-     
+        {image && image.length > 0 ? 
+        
         <Image 
         resizeMode="stretch"
         source={{uri: image}}
@@ -110,24 +110,39 @@ const CoursesHomeScreen = () => {
          
         >
         </Image>
-       
-       <Text style = {styles.infofont}>Teachers(s): {'\n'}{president} </Text>
-       <Text style = {styles.infofont}>Description of Course:  {'\n'} {descriptionofclub}  </Text>
+       : <></>}
+
+       <Text style = {styles.infofont}>Rigor:  </Text>
+       <Text style = {styles.infofont2}>{Rigor}</Text>
+       <Text style = {styles.infofont}>Teachers:  </Text>
+       <Text style = {styles.infofont2}>{Teachers}</Text>
+       <Text style = {styles.infofont}>Description of Club: </Text>
+       <Text style = {styles.infofont2}>{descriptionofclub}  </Text>
+
     
-      <Button title = "edit information" onPress={() => navigation.navigate('clubeditscreen', {
-            schoolname: schoolname
-          })
-        }></Button>
-      <View style = {styles.buttonStyle}>
-        <Button color="#841584"
-            title="See Reviews"
-            onPress={() => navigation.navigate('clubfeedscreen', {
-              schoolname: schoolname
-            })
-          }
-          />
-      </View>
-      <Text style = {styles.infofont2}></Text>
+     
+     <View style = {{top: '5%'}}>
+      <TouchableOpacity  
+       onPress={() => navigation.navigate('coursesEditScreen', {
+        schoolname: schoolname
+      })
+    }
+      style={styles.button}>
+    <Text style={styles.text}>Edit Information</Text>
+  </TouchableOpacity>
+  </View>
+  <View style = {{top: '10%'}}>
+   <TouchableOpacity  
+       onPress={() => navigation.navigate('clubfeedscreen', {
+        schoolname: schoolname
+      })
+    }
+      style={styles.button}>
+    <Text style={styles.text}>See Reviews</Text>
+  </TouchableOpacity>
+  </View>
+
+
         </ScrollView>
                
      <Text
@@ -135,7 +150,8 @@ const CoursesHomeScreen = () => {
            style = {{
              width: '100%',
              textAlign: 'center',
-             color: 'red',
+             color: 'black',
+             fontWeight: 'bold',
              marginTop: 'auto',
              marginVertical: 20,
              fontSize: 20
@@ -179,27 +195,32 @@ container: {
       letterSpacing: 3,
       
     },
-  
-  
    infofont: {
     fontSize: RFPercentage(2.8),
-    marginTop: '3%',
-    alignContent: 'flex-end'
-  
+    marginTop: '2%',
+    alignContent: 'flex-end',
+    color: 'black',
+    fontWeight: 'bold'
+   
    },
    infofont2: {
-    fontSize: RFPercentage(3),
-    marginTop: '20%'
-  
+    fontSize: RFPercentage(2.8),
+    alignContent: 'flex-end',
+    color: 'black',
    },
-
-   text: {
-    fontSize: RFValue(4)   
-   },
-
+ 
+   button: {
+    backgroundColor: 'black',
+    padding: 10,
+    alignItems: 'center',  
+  },
+  text: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 
    
   });
  
 
-export default CoursesHomeScreen;
+export default ClubHomeScreen;

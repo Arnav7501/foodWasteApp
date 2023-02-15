@@ -5,9 +5,7 @@ import { StatusBar, StyleSheet,  Text, View,
 
 import { useRoute } from '@react-navigation/native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import { useNavigation, NavigationContainer, useFocusEffect} from '@react-navigation/native'
-import rectangleicon from '../../../assets/images/rectangle.png'
-import plusicon from '../../../assets/images/plus.png'
+import { useNavigation, useFocusEffect} from '@react-navigation/native'
 import * as ImagePicker from 'expo-image-picker';
 import { DataStore } from '@aws-amplify/datastore';
 import {Clubinfo} from '../../models';
@@ -15,7 +13,7 @@ import {Clubinfo} from '../../models';
 const ClubHomeScreen = () => {
   
     const [image, setImage] = useState("");
-    const [president, setPresidents] = useState("");
+    const [president, setPresidents] = useState("");  
     const [meetingtimes, setMeetingTimes] = useState("");
     const [howtosignup, setHowToSignUp] = useState("");
     const [averagetimecommitment, setAverageTimeCommitment] = useState("");
@@ -74,7 +72,7 @@ const ClubHomeScreen = () => {
         setPresidents(original[0].Presidents)
         setMeetingTimes(original[0].MeetingTimes)
         setHowToSignUp(original[0].HowToSignUp)
-        setAverageTimeCommitment[original[0].TimeCommitment]
+        setAverageTimeCommitment(original[0].TimeCommitment)
         setDescriptionOfClub(original[0].DescriptionOfClub)
         setImage(original[0].image)
       }
@@ -92,12 +90,12 @@ const ClubHomeScreen = () => {
  
     return (
         <View style={{padding: 10, flex: 1}}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: height * 0.2}}>
 
         <Text style = {{ top:'1%', fontSize: RFPercentage(5.5), alignSelf: 'center', textAlign: 'center', color: '#000000', fontWeight: 'bold'}}>
          {schoolname} </Text>
-
-     
+        {image.length > 0 ? 
+        
         <Image 
         resizeMode="stretch"
         source={{uri: image}}
@@ -112,27 +110,45 @@ const ClubHomeScreen = () => {
          
         >
         </Image>
-       
-       <Text style = {styles.infofont}>President(s): {'\n'}{president} </Text>
-       <Text style = {styles.infofont}>Meeting times:  {'\n'}{meetingtimes}</Text>
-       <Text style = {styles.infofont}>How To Sign Up:  {'\n'}{howtosignup}</Text>
-       <Text style = {styles.infofont}>Average Time Commitment: {'\n'} {averagetimecommitment}</Text>
-       <Text style = {styles.infofont}>Description of Club:  {'\n'} {descriptionofclub}  </Text>
+       : <></>}
+       <Text style = {styles.infofont}>President(s): </Text>
+       <Text style = {styles.infofont2}>{president} </Text>
+       <Text style = {styles.infofont}>Meeting times:  </Text>
+       <Text style = {styles.infofont2}>{meetingtimes}</Text>
+       <Text style = {styles.infofont}>How To Sign Up:  </Text>
+       <Text style = {styles.infofont2}>{howtosignup}</Text>
+       <Text style = {styles.infofont}>Average Time Commitment: </Text>
+       <Text style = {styles.infofont2}>{averagetimecommitment}</Text>
+       <Text style = {styles.infofont}>Description of Club: </Text>
+       <Text style = {styles.infofont2}>{descriptionofclub}  </Text>
+
     
-      <Button title = "edit information" onPress={() => navigation.navigate('clubeditscreen', {
+      {/* <Button title = "edit information" onPress={() => navigation.navigate('clubeditscreen', {
             schoolname: schoolname
           })
-        }></Button>
-      <View style = {styles.buttonStyle}>
-        <Button color="#841584"
-            title="See Reviews"
-            onPress={() => navigation.navigate('clubreviewscreen', {
-              schoolname: schoolname
-            })
-          }
-          />
-      </View>
-      <Text style = {styles.infofont2}></Text>
+        }></Button> */}
+     <View style = {{top: '5%'}}>
+      <TouchableOpacity  
+       onPress={() => navigation.navigate('clubeditscreen', {
+        schoolname: schoolname
+      })
+    }
+      style={styles.button}>
+    <Text style={styles.text}>Edit Information</Text>
+  </TouchableOpacity>
+  </View>
+  <View style = {{top: '10%'}}>
+   <TouchableOpacity  
+       onPress={() => navigation.navigate('clubfeedscreen', {
+        schoolname: schoolname
+      })
+    }
+      style={styles.button}>
+    <Text style={styles.text}>See Reviews</Text>
+  </TouchableOpacity>
+  </View>
+
+
         </ScrollView>
                
      <Text
@@ -184,24 +200,29 @@ container: {
       letterSpacing: 3,
       
     },
-  
-  
    infofont: {
     fontSize: RFPercentage(2.8),
-    marginTop: '3%',
-    alignContent: 'flex-end'
-  
+    marginTop: '2%',
+    alignContent: 'flex-end',
+    color: 'black',
+    fontWeight: 'bold'
+   
    },
    infofont2: {
-    fontSize: RFPercentage(3),
-    marginTop: '20%'
-  
+    fontSize: RFPercentage(2.8),
+    alignContent: 'flex-end',
+    color: 'black',
    },
-
-   text: {
-    fontSize: RFValue(4)   
-   },
-
+ 
+   button: {
+    backgroundColor: 'black',
+    padding: 10,
+    alignItems: 'center',  
+  },
+  text: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 
    
   });

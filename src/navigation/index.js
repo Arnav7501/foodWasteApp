@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ActivityIndicator } from 'react-native';
+import {View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import User_Home from '../carpool/schoolLocation';
 import { useNavigation} from '@react-navigation/native'
 import SignInScreen from '../screens/SignInScreens/SignInScreen'
 import SignUpScreen from '../screens/SignUpScreens/SignUpScreen';
@@ -12,38 +12,54 @@ import ForgotPasswordScreen from '../screens/ForgotPasswordScreens/ForgotPasswor
 import NewPasswordScreen from '../screens/NewPasswordScreens/NewPasswordScreen';
 import HomeScreen from '../../HomeScreen';
 import SchoolHomepageScreen from '../screens/SchoolHomepageScreens/SchoolHomepageScreen';
+
 import Clubinterimscreen from '../screens/ClubScreens/clubinterimscreen'
 import ClubHomeScreen from '../screens/ClubScreens/clubhomescreen'
 import ClubEditScreen from '../screens/ClubScreens/clubeditscreen'
+
+import CoursesInterimScreen from '../screens/CoursesScreens/coursesInterimScreen';
+import CoursesHomeScreen from '../screens/CoursesScreens/coursesHomeScreen';
+import CoursesEditScreen from '../screens/CoursesScreens/coursesEditScreen';
+
+import SportsInterimScreen from '../screens/SportsScreens/sportsInterimScreen';
+import SportsHomeScreen from '../screens/SportsScreens/sportsHomeScreen';
+import SportsEditScreen from '../screens/SportsScreens/sportseditscreen';
+
+import TeachersInterimScreen from '../screens/TeachersScreens/teachersInterimScreen';
+import TeachersHomeScreen from '../screens/TeachersScreens/teachersHomeScreen';
+import TeacherPostScreen from '../screens/TeachersScreens/clubreviewscreen';
+
 import CreatePostScreen2 from '../screens/ClubScreens/clubreviewscreen';
 import FeedScreen2 from '../screens/ClubScreens/clubreviewfeed';
+import TeacherFeedScreen from '../screens/TeachersScreens/teacherreviewfeed';
 import FeedPost from '../screens/ClubScreens/clubpostscreen';
-import { Auth, Hub} from 'aws-amplify';
+
+import MyMap from '../carpool/carpool';
+import { Auth, Hub, DataStore} from 'aws-amplify';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, FontAwesome, AntDesign, Entypo, MaterialIcons} from "@expo/vector-icons";
-
+import {Carpool } from "../models";
  
 const Stack = createNativeStackNavigator()
-const Tab = createBottomTabNavigator();
+
 
 const Navigation = () => {
   const [user, setUser] = useState(undefined)
+  
 
     const checkuser = async() => {
       try { 
       const authuser = await Auth.currentAuthenticatedUser({bypassCache :true})
       setUser(authuser)
-      console.log("auth, ", authuser)
     } catch (e) {
       setUser(null)
-      console.log("auth," , authuser)
       }
      
     }
   useEffect(() => {
     checkuser();
   }, [])
-
+ 
   useEffect(() => {
     const listener = (data) => {
       if (data.payload.event === 'signIn' || data.payload.event === 'signOut') {
@@ -65,19 +81,36 @@ const Navigation = () => {
     )
   }
   
-  function MyTabs() {
-    return (
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen 
+
+
+  return (
+    <NavigationContainer>
+        {user ? (
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+             <Stack.Screen 
             name = "Home" 
             component={HomeScreen} 
             options={{ headerShown: false }}
             />
             <Stack.Screen 
+         name = "userhome" 
+            component={User_Home} 
+    options={{ headerShown: true, title: "Set your locations" }}
+    />
+          <Stack.Screen 
+          name = "carpool" 
+          component={MyMap}   
+
+         options={{ headerShown: true, title: "Carpool",
+
+        }}
+            />    
+            <Stack.Screen 
             name = "SchoolHomePage" 
             component={SchoolHomepageScreen} 
             options =  {{
-              title: "SchoolHomePage"
+              title: "School Homepage",
+              headerShown: true
             }}
             />
             <Stack.Screen 
@@ -87,9 +120,80 @@ const Navigation = () => {
               title: "clubinterimscreen"
             }}
             />
+            <Stack.Screen 
+            name = "teachersInterimScreen" 
+            component={TeachersInterimScreen} 
+            options =  {{
+              title: "clubinterimscreen"
+            }}
+            />
+             <Stack.Screen 
+            name = "sportsInterimScreen" 
+            component={SportsInterimScreen} 
+            options =  {{
+              title: "clubinterimscreen"
+            }}
+            />
+             <Stack.Screen 
+            name = "sportsEditScreen" 
+            component={SportsEditScreen} 
+            options =  {{
+              title: "ClubHomeScreen"
+            }}
+            />
+             <Stack.Screen 
+            name = "coursesInterimScreen" 
+            component={CoursesInterimScreen} 
+            options =  {{
+              title: "clubinterimscreen"
+            }}
+            />
+             <Stack.Screen 
+            name = "coursesEditScreen" 
+            component={CoursesEditScreen} 
+            options =  {{
+              title: "clubinterimscreen"
+            }}
+            />
              <Stack.Screen 
             name = "clubhomescreen" 
             component={ClubHomeScreen} 
+            options =  {{
+              title: "ClubHomeScreen"
+            }}
+            />
+            <Stack.Screen 
+            name = "coursesHomeScreen" 
+            component={CoursesHomeScreen} 
+            options =  {{
+              title: "ClubHomeScreen"
+            }}
+            />
+            <Stack.Screen 
+            name = "teachersHomeScreen" 
+            component={TeachersHomeScreen} 
+            options =  {{
+              title: "ClubHomeScreen"
+            }}
+            />
+            <Stack.Screen 
+            name = "teachersPostScreen" 
+            component={TeacherPostScreen} 
+            options =  {{
+              title: "teachersPostScreen"
+            }}
+            />
+            <Stack.Screen 
+            name = "teachersFeedScreen" 
+            component={TeacherFeedScreen} 
+            options =  {{
+              title: "Teacher Reviews",
+              headerShown: true
+            }}
+            />
+            <Stack.Screen 
+            name = "sportsHomescreen" 
+            component={SportsHomeScreen} 
             options =  {{
               title: "ClubHomeScreen"
             }}
@@ -112,7 +216,8 @@ const Navigation = () => {
             name = "clubfeedscreen" 
             component={FeedScreen2} 
             options =  {{
-              title: "clubfeedscreen"
+              title: "Reviews",
+              headerShown: true
             }}
             />
               <Stack.Screen 
@@ -124,83 +229,8 @@ const Navigation = () => {
             />
            
       </Stack.Navigator>
-    );
-  }
-
-
-  return (
-    <NavigationContainer>
-
-    
-        {user ? (
-          <Tab.Navigator>
-          <>
-          <Tab.Screen name="Teachers" component={MyTabs}   
-          options={{ headerShown: false,
-           tabBarIcon: (tabInfo) => {
-            return (
-              <Ionicons
-                name="person"
-                size={24}
-                color={tabInfo.focused ? "#006600" : "#8e8e93"}
-              />
-            );
-          },
-          }}/>     
-          
-          <Tab.Screen name="Sport" component={MyTabs}   
-          options={{ headerShown: false,
-           tabBarIcon: (tabInfo) => {
-            return (
-              <FontAwesome
-                name="soccer-ball-o"
-                size={24}
-                color={tabInfo.focused ? "#006600" : "#8e8e93"}
-              />
-            );
-          },
-          }}/>   
-          <Tab.Screen name="home" component={MyTabs}   
-          options={{ headerShown: false,
-           tabBarIcon: (tabInfo) => {
-            return (
-              <Ionicons
-                name="md-home"
-                size={24}
-                color={tabInfo.focused ? "#006600" : "#8e8e93"}
-              />
-            );
-          },
-          }}/>       
-          <Tab.Screen name="Courses" component={MyTabs}   
-          options={{ headerShown: false,
-           tabBarIcon: (tabInfo) => {
-            return (
-              <Entypo
-                name="book"
-                size={24}
-                color={tabInfo.focused ? "#006600" : "#8e8e93"}
-              />
-            );
-          },
-          }}/>   
-
-           <Tab.Screen name="Clubs" component={MyTabs}   
-          options={{ headerShown: false,
-           tabBarIcon: (tabInfo) => {
-            return (
-              <MaterialIcons
-                name="computer"
-                size={24}
-                color={tabInfo.focused ? "#006600" : "#8e8e93"}
-              />
-            );
-          },
-          }}/>       
-         
-         
-        </>
-          </Tab.Navigator>    
+       
+       
         ) : (
           <Stack.Navigator screenOptions={{headerShown: false}}>
           <>

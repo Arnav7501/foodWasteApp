@@ -1,12 +1,16 @@
-import React, {useState} from 'react';
-import {Alert, TextInput, View, Text, Image, StyleSheet,
-     useWindowDimensions, ScrollView, TouchableOpacity } from 'react-native'
-import { Auth } from 'aws-amplify';
-import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
+import React from 'react';
+import { View, Text, Image, StyleSheet,
+     ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native'
+
 import { useRoute } from '@react-navigation/native';
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { RFPercentage } from "react-native-responsive-fontsize";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation} from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons'; 
+
 
 
 const SchoolHomepageScreen = () => {
@@ -14,6 +18,7 @@ const SchoolHomepageScreen = () => {
     const navigation = useNavigation()
     const schoolname1 = route.params.schoolname;
     var schoolname = ""
+    const {height} = useWindowDimensions()
   
     for(let i = 9; i < schoolname1.length; i++){
         if (schoolname1[i] != "\"" && schoolname[i+1] != "}") {
@@ -24,25 +29,20 @@ const SchoolHomepageScreen = () => {
         }
     }
 
-    const goback = () => {
-        navigation.goBack()
-    }
-
    
-
-    console.log(schoolname)
     return (
-       <SafeAreaView >
+      <ScrollView contentContainerStyle={{ paddingBottom: height * 0.25}}>
+       <SafeAreaView style = {{backgroundColor: "#000000"}}>
+       <View style={{justifyContent: 'center', alignItems: 'center'}}>
+
+     
              <Text style = {{
                 fontSize: 40,
                 fontWeight: 'bold',
-                alignSelf: 'center',
+                color: "#ffffff",
                 textAlign: 'center'
-  
-                
              }}>{schoolname}</Text>
-   
-
+   </View>
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate('clubinterimscreen', {
@@ -52,40 +52,57 @@ const SchoolHomepageScreen = () => {
             >
             
             <Text style = {styles.buttonFont}>Clubs</Text>
-            <Image
-            source={require('../../../assets/images/computericon.png')}
-            style={styles.buttonImageIconStyle}
-            />
+            <MaterialIcons name="computer" size={120} color="black" style = {{ marginLeft: 'auto'}} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}>
+            style={styles.button}
+            onPress={() => navigation.navigate('teachersInterimScreen', {
+              schoolname: schoolname
+            })
+          }
+            >
             
             <Text style = {styles.buttonFont}>Teachers</Text>
-            <Image
-            source={require('../../../assets/images/teachericon.png')}
-            style={styles.buttonImageIconStyle}
-            />
+            <FontAwesome5 name="chalkboard-teacher" size={90} color="black" style = {{ marginLeft: 'auto',}}  />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}>
+            style={styles.button}
+            onPress={() => navigation.navigate('sportsInterimScreen', {
+              schoolname: schoolname
+            })
+          }
+            
+            >
              
             <Text style = {styles.buttonFont}>Sports</Text>
-            < Image
-            source={require('../../../assets/images/clubicon.png')}
-            style={styles.buttonImageIconStyle}
-            />
+            <MaterialIcons name="sports-football" size={100} color="black" style = {{ marginLeft: 'auto'}} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}>
+            style={styles.button}
+            onPress={() => navigation.navigate('coursesInterimScreen', {
+              schoolname: schoolname
+            })
+          }>
                
             <Text style = {styles.buttonFont}>Courses</Text>
-            < Image
-            source={require('../../../assets/images/coursesicon.png')}
-            style={styles.buttonImageIconStyle}
-            />
+            <Entypo name="book" size={100} color="black" style = {{ marginLeft: 'auto',}} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('userhome', {
+              schoolname: schoolname
+            })
+          }>
+               
+            <Text style = {styles.buttonFont}>Carpool</Text>
+            <FontAwesome name="car" size={80} color="black" style = {{ marginLeft: 'auto',}}  />
           </TouchableOpacity>
           
+         
         </SafeAreaView>
+        </ScrollView>
+
+
       );
     };
 
@@ -104,10 +121,11 @@ const styles = StyleSheet.create({
       alignItems: "center",
       backgroundColor: "#ffffff",
       padding: 10,
-      height: "23%",
+      height: "20.5%",
       justifyContent: 'center',
       borderColor: "#000000",
       borderWidth: 2,
+    
     },
     countContainer: {
       alignItems: "center",
@@ -122,7 +140,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       marginRight: '0%',
       height: '90%',
-      width: '25%',
+      width: '30%',
       resizeMode: 'stretch',
       marginLeft: 'auto',
       justifyContent: 'flex-start',

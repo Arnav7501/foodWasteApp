@@ -42,7 +42,6 @@ const username = watch('username')
         }
     }
 
-    console.log("we made it")
     return (
        
     <ScrollView showsVerticalScrollIndicator = {false}>

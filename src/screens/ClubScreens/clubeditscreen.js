@@ -21,7 +21,6 @@ const update_Array = async(identifier, Presidents, MeetingTimes,HowToSignUp,Time
     p.identifier("eq", identifier)
   );
     if (original.length == 0) {
-        console.log("null", identifier)
         await DataStore.save(
             new Clubinfo({
               identifier: identifier,
@@ -214,7 +213,7 @@ export default function ClubEditScreen() {
       </Pressable>
         <Text
          onPress={() => {
-          console.log("image,",image)
+       
           update_Array(schoolname1,Presidents,MeetingTimes,HowToSignUp,TimeCommitment,Description, image)}}
            style = {{
              width: '100%',
@@ -230,8 +229,10 @@ export default function ClubEditScreen() {
            style = {{
              width: '100%',
              textAlign: 'center',
-             color: 'red',
+             color: 'black',
+             fontWeight: 'bold',
              marginTop: 'auto',
+             top: '10%',
              marginVertical: 20,
              fontSize: 20
            }}>

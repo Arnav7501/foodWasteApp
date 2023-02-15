@@ -29,7 +29,6 @@ const App = () =>  {
     return (
       <SafeAreaView style = {styles.root}>
       <Navigation/>
-	<Text> testing merge effects  </Text>
       </SafeAreaView>
       
     );

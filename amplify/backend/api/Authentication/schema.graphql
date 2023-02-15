@@ -1,3 +1,61 @@
+type CoursesInfo @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Description: String
+  Rigor: String
+  Teachers: String
+  identifier: String
+  Image: String
+}
+
+type SportsInfo @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  MeetingTimes: String
+  Description: String
+  HowToSignUp: String
+  TimeCommitment: String
+  Image: String
+  Identifier: String
+}
+
+type Carpool @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  latitude: Float
+  longitude: Float
+  latitudeDelta: Float
+  longitudeDelta: Float
+  identifier: String
+  location: String
+  person_who_posted: String
+  longitude2: Float
+  latitude2: Float
+}
+
+type TeachersInfo @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  classes: String
+  description: String
+  identifier: String
+  Image: String
+}
+
+type CoursesArray @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  identifier: String
+  name: String
+}
+
+type SportsArray @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  identifier: String
+  name: String
+}
+
+type TeachersArray @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  identifier: String
+  name: String
+}
+
 type Post2 @model @auth(rules: [{allow: public}]) {
   id: ID!
   description: String
