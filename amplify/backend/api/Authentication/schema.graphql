@@ -28,6 +28,7 @@ type Carpool @model @auth(rules: [{allow: public}]) {
   person_who_posted: String
   longitude2: Float
   latitude2: Float
+  email: String
 }
 
 type TeachersInfo @model @auth(rules: [{allow: public}]) {
